@@ -44,7 +44,7 @@ def users_list():
     return user_list
 
 
-def check_for_presence_in_db(stud):
+def check_for_presence_in_db(value):
     connection = create_connection(DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT)
     cursor = connection.cursor()
     result = None
@@ -60,7 +60,7 @@ def check_for_presence_in_db(stud):
             total1.append(val.strip())
         total.append(total1)
     for st in total:
-        if ' '.join(st) == stud:
+        if ' '.join(st) == value:
             return True
     return False
 
@@ -90,6 +90,11 @@ def users():
     return render_template('users.html', users=users_list())
 
 
+@app.route('/')
+def index1():
+    return redirect('http://127.0.0.1:5000/users')
+
+
 @app.route('/users/<username>')
 def check(username):
     users = ''
@@ -109,7 +114,6 @@ def check(username):
            f'<h2>Surname:{users["surname"]} </h2> <br>' \
            f'<h2>Telephone:{users["telephone"]} </h2> <br>' \
            f'<h2>Age:{users["age"]} </h2> <br>'
-
 
 if __name__ == '__main__':
     app.run(debug=True)
