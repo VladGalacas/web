@@ -89,11 +89,6 @@ def users():
     return render_template('users.html', users=users_list())
 
 
-@app.route('/')
-def index1():
-    return redirect('http://127.0.0.1:5000/users')
-
-
 @app.route('/users')
 def user():
     tt = ''
