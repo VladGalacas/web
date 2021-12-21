@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, abort
 import psycopg2
 from config import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT
 
+
 def create_connection(db_name, db_user, db_password, db_host, db_port):
     connection = None
     connection = psycopg2.connect(
@@ -87,16 +88,6 @@ def users():
         if not check_for_presence_in_db(f'{name} {surname} {telephone} {age}'):
             data_recording(name, surname, telephone, age)
     return render_template('users.html', users=users_list())
-
-
-@app.route('/users')
-def user():
-    tt = ''
-    for i in users_list():
-        t = '<a href="http://127.0.0.1:5000/users/%s"> %s %s</a><br>' % (
-        i['username'], i['name'], i['surname'], i['telephone'], i['age'])
-        tt += t
-    return tt
 
 
 @app.route('/users/<username>')
