@@ -123,7 +123,7 @@ def delete_user(username):
     if not flag:
         abort(505)
     insert_query = (
-        f"DELETE FROM users WHERE name='{users['name']}' AND surname='{users['surname']}'")
+        f"DELETE FROM users WHERE name='{users['name']}' AND surname='{users['surname']}' AND telephone='{users['telephone']}' AND age='{users['age']}'")
     query_introduction(insert_query)
     return redirect('/users')
 
