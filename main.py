@@ -15,23 +15,12 @@ def create_connection(db_name, db_user, db_password, db_host, db_port):
     return connection
 
 
-def data_recording(name, surname, telephone, age):
+def query_introduction(insert_query):
     connection = create_connection(DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT)
-    insert_query = (
-        f"INSERT INTO users (name, surname, telephone, age) VALUES ('{name}', '{surname}', '{telephone}', '{age}')")
     cursor = connection.cursor()
     cursor.execute(insert_query)
     connection.commit()
 
-def data_delete(name, surname):
-    connection = create_connection(DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT)
-    insert_query = (
-        f"DELETE FROM users WHERE name='{name}' AND surname='{surname}'")
-    cursor = connection.cursor()
-    cursor.execute(insert_query)
-    connection.commit()
-
-# data_delete('Vladislav', 'Kozlov')
 
 
 def users_list():
@@ -96,7 +85,9 @@ def users():
         telephone = request.form.get('telephone')
         age = request.form.get('age')
         if not check_for_presence_in_db(f'{name} {surname} {telephone} {age}'):
-            data_recording(name, surname, telephone, age)
+            insert_query = (
+                f"INSERT INTO users (name, surname, telephone, age) VALUES ('{name}', '{surname}', '{telephone}', '{age}')")
+            query_introduction(insert_query)
     return render_template('users.html', users=users_list())
 
 
@@ -131,7 +122,9 @@ def delete_user(username):
     for i in users_list():
         if username == i['username']:
             users = i
-    data_delete(users['name'], users['surname'])
+    insert_query = (
+        f"DELETE FROM users WHERE name='{users['name']}' AND surname='{users['surname']}'")
+    query_introduction(insert_query)
     return redirect('http://127.0.0.1:5000/users')
 
 
