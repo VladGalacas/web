@@ -23,6 +23,16 @@ def data_recording(name, surname, telephone, age):
     cursor.execute(insert_query)
     connection.commit()
 
+def data_delete(name, surname):
+    connection = create_connection(DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT)
+    insert_query = (
+        f"DELETE FROM users WHERE name='{name}' AND surname='{surname}'")
+    cursor = connection.cursor()
+    cursor.execute(insert_query)
+    connection.commit()
+
+# data_delete('Vladislav', 'Kozlov')
+
 
 def users_list():
     connection = create_connection(DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT)
@@ -114,6 +124,16 @@ def check(username):
            f'<h2>Surname:{users["surname"]} </h2> <br>' \
            f'<h2>Telephone:{users["telephone"]} </h2> <br>' \
            f'<h2>Age:{users["age"]} </h2> <br>'
+
+
+@app.route('/users/<username>/del')
+def delete_user(username):
+    for i in users_list():
+        if username == i['username']:
+            users = i
+    data_delete(users['name'], users['surname'])
+    return redirect('http://127.0.0.1:5000/users')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
