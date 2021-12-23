@@ -93,23 +93,19 @@ def users():
 
 @app.route('/')
 def index1():
-    return redirect('http://127.0.0.1:5000/users')
+    return redirect('/users')
 
 
 @app.route('/users/<username>')
 def check(username):
-    users = ''
-    flag = []
-    for i in users_list():
-        if username != i['username']:
-            flag.append(False)
-        else:
-            flag.append(True)
-    if any(flag) == False:
-        abort(404)
+    flag = False
     for i in users_list():
         if username == i['username']:
+            flag = True
             users = i
+    if not flag:
+        abort(505)
+
     return f'<h2>UserName:{users["username"]} </h2> <br>' \
            f'<h2>Name:{users["name"]} </h2> <br>' \
            f'<h2>Surname:{users["surname"]} </h2> <br>' \
@@ -119,13 +115,17 @@ def check(username):
 
 @app.route('/users/<username>/del')
 def delete_user(username):
+    flag = False
     for i in users_list():
         if username == i['username']:
+            flag = True
             users = i
+    if not flag:
+        abort(505)
     insert_query = (
         f"DELETE FROM users WHERE name='{users['name']}' AND surname='{users['surname']}'")
     query_introduction(insert_query)
-    return redirect('http://127.0.0.1:5000/users')
+    return redirect('/users')
 
 
 if __name__ == '__main__':
