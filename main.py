@@ -143,7 +143,7 @@ def update_user(username):
         age = request.form.get('age')
         flag = True
         for i in users_list():
-            if name + surname == i['username']:
+            if name + surname == i['username'] and telephone == i['telephone'] and age == i['age']:
                 flag = False
                 abort(404)
         if flag:
