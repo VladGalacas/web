@@ -22,7 +22,6 @@ def query_introduction(insert_query):
     connection.commit()
 
 
-
 def users_list():
     connection = create_connection(DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT)
     cursor = connection.cursor()
@@ -126,6 +125,32 @@ def delete_user(username):
         f"DELETE FROM users WHERE name='{users['name']}' AND surname='{users['surname']}' AND telephone='{users['telephone']}' AND age='{users['age']}'")
     query_introduction(insert_query)
     return redirect('/users')
+
+
+@app.route('/users/<username>/update', methods=['get', 'post'])
+def update_user(username):
+    flag = False
+    for i in users_list():
+        if username == i['username']:
+            flag = True
+            users = i
+    if not flag:
+        abort(505)
+    if request.method == 'POST':
+        name = request.form.get('name')
+        surname = request.form.get('surname')
+        telephone = request.form.get('telephone')
+        age = request.form.get('age')
+        flag = True
+        for i in users_list():
+            if name + surname == i['username']:
+                flag = False
+                abort(404)
+        if flag:
+            insert_query = (
+                f"UPDATE users SET name='{name}', surname='{surname}', telephone='{telephone}', age='{age}' WHERE name='{users['name']}' AND surname='{users['surname']}' AND telephone='{users['telephone']}' AND age='{users['age']}'")
+            query_introduction(insert_query)
+    return render_template('update_user.html')
 
 
 if __name__ == '__main__':
